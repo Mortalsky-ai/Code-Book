@@ -3,42 +3,30 @@ using UnityEngine;
 
 public class Playermovement : MonoBehaviour
 {
-    public Rigidbody2D rb;
-    public float speed;
-    public float jumpspeed;
-    public float jumpHeight = 1;
-    float mH;
-    public SpriteRenderer sr;
-    float time = 0;
-    public float Dashduration = 0.5f;
-    public float dashforce = 10;
-    float dash_dir;
-
-    public void Movement()
+    public void Movement(Rigidbody2D rb, float speed, float mH) // mH gives Horizontal direction of movement
     {
-        mH = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(mH * speed, 0);
-        if (Input.GetAxisRaw("Horizontal") != 0) { dash_dir = Input.GetAxisRaw("Horizontal"); }
+        rb.velocity = new Vector2(mH * speed, rb.velocity.y);
     }
 
-    public void Jump()
+    public void Jump(Rigidbody2D rb, float jumpspeed)
     {
-        if (Input.GetKey(KeyCode.Space) )
-        {
-            rb.velocity = new Vector2(mH * speed, jumpspeed);
-        }
+             rb.velocity = new Vector2(rb.velocity.x, jumpspeed); 
 
     }
 
-    public void dash()
+    public void dash(Rigidbody2D rb, float dashforce, float Dashduration, float dash_dir) 
+        /* take dash_dir by 
+     if(Input.GetAxisRaw("Horizontal") != 0)
     {
-        if (Input.GetKey(KeyCode.LeftShift)){
+        dash_dir = Input.GetAxisRaw("Horizontal");
+    }*/
+    {
+        float time = 0;
+
             while (time < Dashduration)
             {
-                rb.AddForce( dash_dir*Vector2.right * dashforce);
+                rb.AddForce( dash_dir *Vector2.right * dashforce);
                 time += Time.deltaTime;
             }
-            time = 0;
-        }
     }
 }
