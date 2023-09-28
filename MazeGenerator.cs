@@ -9,13 +9,9 @@ public class MazeGenerator : MonoBehaviour {
     public int mazeRows;
    
     public int mazeColumns;
-
-    [Header("Maze object variables:")]
-    [Tooltip("Cell prefab object.")]
     [SerializeField]
     private GameObject cellPrefab;
 
-    [Tooltip("If you want to disable the main sprite so the cell has no background, set to TRUE. This will create a maze with only walls.")]
     public bool disableCellSprite;
 
     // ------------------------------------------------------
@@ -54,10 +50,6 @@ public class MazeGenerator : MonoBehaviour {
      * pass a rows value and columns value as parameters and the generator will
      * do the rest for you. Enjoy!
      */
-    private void Start()
-    {
-        GenerateMaze(mazeRows, mazeColumns);
-    }
 
     private void GenerateMaze(int rows, int columns)
     {
