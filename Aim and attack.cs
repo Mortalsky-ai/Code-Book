@@ -17,6 +17,8 @@ public class Aimandattack : MonoBehaviour
 
     public void Long_fire(Rigidbody2D bullet, Vector3 bullet_offset, Transform parent,float aim_angle , float bullet_speed) // use to  fire anything
     {
+        if (aim_angle > Mathf.PI/2) aim_angle = Mathf.PI/2;
+        else if(aim_angle < -1*Mathf.PI/2) aim_angle  = -1*Mathf.PI/2;
         Quaternion rotation = Quaternion.Euler(0, 0, aim_angle * Mathf.Rad2Deg);
         Rigidbody2D new_bullet = Instantiate(bullet, parent.position+bullet_offset, rotation, parent);
         new_bullet.velocity = new Vector2(bullet_speed * Mathf.Cos(aim_angle), bullet_speed * Mathf.Sin(aim_angle));
@@ -38,6 +40,8 @@ public class Aimandattack : MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
+            if (aim_angle > Mathf.PI / 2) aim_angle = Mathf.PI / 2;
+            else if (aim_angle < -1 * Mathf.PI / 2) aim_angle = -1 * Mathf.PI / 2;
             line.enabled = true;
             Vector3 startPosition = parent.position + bullet_offset;
             Vector3 startVelocity = new Vector3(bullet_speed * Mathf.Cos(aim_angle), bullet_speed * Mathf.Sin(aim_angle), 0);
@@ -51,7 +55,7 @@ public class Aimandattack : MonoBehaviour
                 linePosition.y = startPosition.y + startVelocity.y * j + 0.5f * bullet.gravityScale * -9.81f * j * j;
                 if (Physics2D.Raycast(prev_point, linePosition - prev_point, Vector3.Distance(linePosition, prev_point)))
                 {
-                    line.SetPosition(i, linePosition);
+                    line.SetPosition(i, prev_point);
                     break;
                 }
                 line.SetPosition(i, linePosition);
