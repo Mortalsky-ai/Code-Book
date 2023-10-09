@@ -17,7 +17,9 @@ public class Cursor_Based_Trajectory : MonoBehaviour
 
         double x = cursorPos.x - bulletPos.x;
         double y = cursorPos.y - bulletPos.y;
-
+        double distance = Math.Sqrt(x * x + y * y);
+        Debug.Log("Distance= " + distance);
+        velocity = 1.1236 * distance + 8.163;
         double a = (g / 2.0) * (x * x) / (velocity * velocity);
         double det = (x * x - 4.0 * a * (y + a));
 
@@ -26,7 +28,7 @@ public class Cursor_Based_Trajectory : MonoBehaviour
             Debug.Log("No solution");
             double t = velocity / Math.Sqrt(2);
             Vector2 max_velocityVector = new Vector2((float)t, (float)t);
-            Debug.Log("Velocity Vector = " + max_velocityVector);
+            //Debug.Log("Velocity Vector = " + max_velocityVector);
             return new Vector2(Math.Sign(x) * max_velocityVector.x, max_velocityVector.y);
         }
 
@@ -35,7 +37,7 @@ public class Cursor_Based_Trajectory : MonoBehaviour
         double cosTheta = 1.0 / Math.Sqrt(1.0 + tanTheta * tanTheta);
 
         Vector2 velocityVector = new Vector2((float)(velocity * cosTheta), (float)(velocity * sinTheta));
-        Debug.Log("Velocity= " + velocity);
+        //Debug.Log("Velocity= " + velocity);
 
         return x > 0 ? velocityVector : -velocityVector;
     }
