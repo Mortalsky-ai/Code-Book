@@ -5,6 +5,7 @@ using static UnityEditor.PlayerSettings;
 using UnityEngine.SceneManagement;
 using static UnityEditor.Recorder.OutputPath;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class Aimandattack : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Aimandattack : MonoBehaviour
         return aim_angle;
     } 
 
+
+
     public void Long_fire(Rigidbody2D bullet, Vector3 bullet_offset, Transform parent,float aim_angle , float bullet_speed) // use to  fire anything
     {
         if (aim_angle > Mathf.PI/2) aim_angle = Mathf.PI/2;
@@ -22,19 +25,28 @@ public class Aimandattack : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, 0, aim_angle * Mathf.Rad2Deg);
         Rigidbody2D new_bullet = Instantiate(bullet, parent.position+bullet_offset, rotation, parent);
         new_bullet.velocity = new Vector2(bullet_speed * Mathf.Cos(aim_angle), bullet_speed * Mathf.Sin(aim_angle));
-        //new_bullet.velocity = bullet_velocity;
     }
+
+
+
 
     public void Rotate_with_velocity(Rigidbody2D bullet) // use to rotate arrow in place of bullet in direction of projectile, need to attach this script in arrow prefab
     {
-        float velocity_angle = Mathf.Atan2(bullet.velocity.y, bullet.velocity.x) * Mathf.Rad2Deg;
-        bullet.rotation = velocity_angle;
+        if (bullet.velocity != Vector2.zero)
+        {
+            float velocity_angle = Mathf.Atan2(bullet.velocity.y, bullet.velocity.x) * Mathf.Rad2Deg;
+            bullet.rotation = velocity_angle;
+        } 
     }
+
+
 
     public void Melee_attack(Animator attack,string attacking,bool is_attacking) // srting is the name of transition bool, bool should be true when key is pressed, false otherwise
     {
         attack.SetBool(attacking, is_attacking);
     }
+
+
 
     public void Trajectory_simulator( Rigidbody2D bullet,Vector3 bullet_offset, Transform parent, float aim_angle, float bullet_speed, LineRenderer line, int length_points) // simulates the path of projectile before hand 
     {
@@ -67,5 +79,28 @@ public class Aimandattack : MonoBehaviour
         {
             line.enabled = false;
         }
+    }
+
+
+
+
+    public void Explode( Rigidbody2D bomb,float blast_radius,float Damage, string enemy_tag) // explodes a bomb and damages enemy
+    {
+        GameObject[] Enemies = GameObject.FindGameObjectsWithTag(enemy_tag);
+        foreach(GameObject enemy in Enemies)
+        {
+            Slider Healthbar = enemy.GetComponent<Slider>(); // reference for health script instead of slider needs to be re-written here
+            if (Vector2.Distance(bomb.position,enemy.transform.position) < blast_radius)
+            {
+                Healthbar.value -= Damage;
+            }
+
+            if(Healthbar.value <= 0)
+            {
+                Destroy(enemy);
+            }
+
+        }
+            Destroy(bomb.gameObject);
     }
 }
